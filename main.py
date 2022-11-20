@@ -11,16 +11,15 @@ pygame.init()
 BACKGROUND = (255, 255, 255)
 
 # Game setup
-FPS = 60
+FPS = 1
 fpsClock = pygame.time.Clock()
 WINDOW_WIDTH = 500
 WINDOW_HEIGHT = 500
-
 GRID_SQUARE_SIZE = 50
 
 SNAKE_START = (WINDOW_WIDTH - 2 * GRID_SQUARE_SIZE, 2 * GRID_SQUARE_SIZE)
 
-snake_object = snake.Snake(SNAKE_START[0], SNAKE_START[1], GRID_SQUARE_SIZE)
+snake_object = snake.Snake(SNAKE_START[0], SNAKE_START[1], GRID_SQUARE_SIZE, snake.Direction.LEFT)
 
 WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption('My Game!')
@@ -38,7 +37,7 @@ def main():
                 sys.exit()
 
         # Processing: Section will be built later
-
+        snake_object.update()
         # Render elements of the game
         WINDOW.fill(BACKGROUND)
         draw_grid(WINDOW, GRID_SQUARE_SIZE)
