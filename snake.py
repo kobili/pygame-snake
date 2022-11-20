@@ -18,16 +18,29 @@ class SnakeSegment:
         self.prev = prev
         self.next = next
 
-    # def update(self, direction: Direction, segment_size: int, max_x: int, max_y: int):
-    #     self.direction = direction
-    #     if direction == Direction.UP:
-    #         self.y = clamp(self.y - segment_size, 0, max_y)
-    #     elif direction == Direction.DOWN:
-    #         self.y = clamp(self.y + segment_size, 0, max_y)
-    #     elif direction == Direction.RIGHT:
-    #         self.x = clamp(self.x + segment_size, 0, max_x)
-    #     elif direction == Direction.LEFT:
-    #         self.x = clamp(self.x - segment_size, 0, max_x)
+    def update(self, direction: Direction, max_x: int, max_y: int):
+        self.direction = direction
+
+        new_x = self.x
+        new_y = self.y
+
+        if direction == Direction.UP:
+            new_y = clamp(self.y - self.segment_size, 0, max_y)
+        elif direction == Direction.DOWN:
+            new_y = clamp(self.y + self.segment_size, 0, max_y)
+        elif direction == Direction.RIGHT:
+            new_x = clamp(self.x + self.segment_size, 0, max_x)
+        elif direction == Direction.LEFT:
+            new_x = clamp(self.x - self.segment_size, 0, max_x)
+
+        if (not self.prev is None):
+            if (new_x == self.prev.x and new_y == self.prev.y):
+                # do nothing so segments don't overlap
+                return
+                
+        self.x = new_x
+        self.y = new_y
+            
 
     def render(self, WINDOW):
         rectangle = pygame.Rect(self.x, self.y, self.segment_size, self.segment_size)
@@ -49,30 +62,37 @@ class Snake:
         self.head_segment.next = self.tail_segment
         
 
-    # def update(self, pressed):
+    def update(self, pressed):
+        previous_segment_direction = self.head_direction
+        # update direction based on user input
+        if (pressed[K_RIGHT] or pressed[K_d]):
+            self.head_direction = Direction.RIGHT
+        if (pressed[K_LEFT] or pressed[K_a]):
+            self.head_direction = Direction.LEFT
+        if (pressed[K_UP] or pressed[K_w]):
+            self.head_direction = Direction.UP
+        if (pressed[K_DOWN] or pressed[K_s]):
+            self.head_direction = Direction.DOWN
 
-    #     # update direction based on user input
-    #     if (pressed[K_RIGHT] or pressed[K_d]):
-    #         self.head_direction = Direction.RIGHT
-    #     if (pressed[K_LEFT] or pressed[K_a]):
-    #         self.head_direction = Direction.LEFT
-    #     if (pressed[K_UP] or pressed[K_w]):
-    #         self.head_direction = Direction.UP
-    #     if (pressed[K_DOWN] or pressed[K_s]):
-    #         self.head_direction = Direction.DOWN
+        # Update the head position first
+        self.head_segment.update(self.head_direction, self.max_x, self.max_y)
 
-    #     new_direction = self.head_direction
+        current_segment = self.head_segment.next
+        while (not current_segment is None):
+            current_segment_direction = current_segment.direction
+            current_segment.update(previous_segment_direction, self.max_x, self.max_y)
+            current_segment = current_segment.next
+            previous_segment_direction = current_segment_direction
 
-    #     for segment in self.segments:
-    #         temp = segment.direction
-    #         segment.update(new_direction, self.segment_size, self.max_x, self.max_y)
-    #         new_direction = temp
 
     def render(self, WINDOW: pygame.Surface):
         current_segment = self.head_segment
         while (not current_segment is None):
             current_segment.render(WINDOW)
             current_segment = current_segment.next
+
+
+
 
 def clamp(x: int, min: int, max: int) -> int:
     if x < min:
