@@ -34,7 +34,7 @@ class Snake:
 
         self.segments = [
             SnakeSegment(head_x, head_y, HEAD_COLOUR, segment_size),
-            SnakeSegment(head_x, head_y - segment_size, BODY_COLOUR, segment_size)    # put this body segment above the head to start
+            # SnakeSegment(head_x, head_y - segment_size, BODY_COLOUR, segment_size)    # put this body segment above the head to start
         ]
 
     def update(self, pressed):
