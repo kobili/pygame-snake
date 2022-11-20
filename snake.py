@@ -11,7 +11,7 @@ BODY_COLOUR = (0, 0, 255)
 class SnakeSegment:
     def __init__(self, x: int, y: int, segment_size: int, colour: tuple, direction: Direction, prev: SnakeSegment | None, next: SnakeSegment | None):
         self.x = x
-        self.y = y,
+        self.y = y
         self.segment_size = segment_size
         self.colour = colour
         self.direction = direction
@@ -30,11 +30,8 @@ class SnakeSegment:
     #         self.x = clamp(self.x - segment_size, 0, max_x)
 
     def render(self, WINDOW):
-        current_segment: SnakeSegment = self
-
-        while(current_segment is not None):
-            rectangle = pygame.Rect(self.x, self.y, self.segment_size, self.segment_size)
-            pygame.draw.rect(WINDOW, self.colour, rectangle)
+        rectangle = pygame.Rect(self.x, self.y, self.segment_size, self.segment_size)
+        pygame.draw.rect(WINDOW, self.colour, rectangle)
 
 class Snake:
     def __init__(self, head_x: int, head_y: int, segment_size: int, head_direction: Direction, max_x: int, max_y: int):
@@ -46,6 +43,7 @@ class Snake:
         self.max_x = max_x
         self.max_y = max_y
 
+        # initialize head segment and one body segment
         self.head_segment = SnakeSegment(head_x, head_y, segment_size, HEAD_COLOUR, Direction.DOWN, None, None)
         self.tail_segment = SnakeSegment(head_x, head_y - segment_size, segment_size, BODY_COLOUR, Direction.DOWN, self.head_segment, None)
         self.head_segment.next = self.tail_segment
@@ -71,7 +69,10 @@ class Snake:
     #         new_direction = temp
 
     def render(self, WINDOW: pygame.Surface):
-        self.head_segment.render(WINDOW)
+        current_segment = self.head_segment
+        while (not current_segment is None):
+            current_segment.render(WINDOW)
+            current_segment = current_segment.next
 
 def clamp(x: int, min: int, max: int) -> int:
     if x < min:
