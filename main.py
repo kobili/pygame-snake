@@ -39,7 +39,7 @@ def main():
         # Processing: Section will be built later
         pressed = pygame.key.get_pressed()
 
-        snake_object.update(pressed)
+        # snake_object.update(pressed)
         # Render elements of the game
         WINDOW.fill(BACKGROUND)
         draw_grid(WINDOW, GRID_SQUARE_SIZE)
