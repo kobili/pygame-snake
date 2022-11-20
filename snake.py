@@ -1,4 +1,5 @@
 import pygame
+from pygame.locals import *
 from enum import Enum
 
 Direction = Enum('Direction', ['UP', 'DOWN', 'RIGHT', 'LEFT'])
@@ -52,6 +53,18 @@ class Snake:
             prev_segment_position = current_position
 
     def get_update_head_position(self) -> tuple:
+
+        # update direction based on user input
+        pressed = pygame.key.get_pressed()
+        if (pressed[K_RIGHT] or pressed[K_d]):
+            self.head_direction = Direction.RIGHT
+        if (pressed[K_LEFT] or pressed[K_a]):
+            self.head_direction = Direction.LEFT
+        if (pressed[K_UP] or pressed[K_w]):
+            self.head_direction = Direction.UP
+        if (pressed[K_DOWN] or pressed[K_s]):
+            self.head_direction = Direction.DOWN
+
         head = self.segments[0]
 
         if self.head_direction == Direction.UP:
