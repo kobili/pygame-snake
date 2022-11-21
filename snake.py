@@ -9,7 +9,7 @@ HEAD_COLOUR = (255, 0, 0)
 TAIL_COLOUR = (0, 0, 255)
 
 class Snake:
-    def __init__(self, start_x: int, start_y: int, direction: Direction, max_x: int, max_y: int, segment_size: int, tail_length: int = 1):
+    def __init__(self, start_x: int, start_y: int, direction: Direction, max_x: int, max_y: int, segment_size: int, tail_length: int = 2):
         self.direction = direction
         self.max_x = max_x
         self.max_y = max_y
@@ -35,15 +35,24 @@ class Snake:
         self.tail.insert(0, (self.x, self.y))
 
         if self.direction == Direction.UP:
-            self.y = clamp(self.y - self.segment_size, 0, self.max_y)
+            self.y = self.y - self.segment_size
         elif self.direction == Direction.DOWN:
-            self.y = clamp(self.y + self.segment_size, 0, self.max_y)
+            self.y = self.y + self.segment_size
         elif self.direction == Direction.RIGHT:
-            self.x = clamp(self.x + self.segment_size, 0, self.max_x)
+            self.x = self.x + self.segment_size
         elif self.direction == Direction.LEFT:
-            self.x = clamp(self.x - self.segment_size, 0, self.max_x)
-        # if (self.x, self.y) == current_pos:
-        #     return
+            self.x = self.x - self.segment_size
+
+        # move the snake to the other side of the screen if it goes out of bounds
+        if self.x > self.max_x:
+            self.x = 0
+        if self.x < 0:
+            self.x = self.max_x
+
+        if self.y > self.max_y:
+            self.y = 0
+        if self.y < 0:
+            self.y = self.max_y
 
         if len(self.tail) > self.tail_length:
             self.tail = self.tail[:-1]
