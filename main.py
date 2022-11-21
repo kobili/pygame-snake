@@ -27,7 +27,7 @@ pygame.display.set_caption('My Game!')
 # The main function that controls the game
 def main():
     looping = True
-
+    frames = 0
     # Main game loop
     while looping:
         # Get inputs
@@ -38,8 +38,10 @@ def main():
 
         # Processing: Section will be built later
         pressed = pygame.key.get_pressed()
+        snake_object.update_direction(pressed)
 
-        # snake_object.update(pressed)
+        if frames % 30 == 0:
+            snake_object.update()
 
         # Render elements of the game
         WINDOW.fill(BACKGROUND)
@@ -48,5 +50,6 @@ def main():
 
         pygame.display.update()
         fpsClock.tick(FPS)
+        frames += 1
 
 main()
