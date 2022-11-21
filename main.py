@@ -3,7 +3,7 @@ import sys
 import random
 from pygame.locals import *
 from debug import draw_grid
-import snake
+from game_state import GameState
 
 pygame.init()
 
@@ -15,14 +15,12 @@ FPS = 60
 fpsClock = pygame.time.Clock()
 WINDOW_WIDTH = 500
 WINDOW_HEIGHT = 500
-GRID_SQUARE_SIZE = 20
-
-SNAKE_START = (WINDOW_WIDTH - 2 * GRID_SQUARE_SIZE, 2 * GRID_SQUARE_SIZE)
-
-snake_object = snake.Snake(SNAKE_START[0], SNAKE_START[1], snake.Direction.DOWN, WINDOW_WIDTH - GRID_SQUARE_SIZE, WINDOW_HEIGHT - GRID_SQUARE_SIZE, GRID_SQUARE_SIZE)
+GRID_SQUARE_SIZE = 50
 
 WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption('My Game!')
+
+game_state = GameState(WINDOW, GRID_SQUARE_SIZE, WINDOW_WIDTH, WINDOW_HEIGHT)
 
 # The main function that controls the game
 def main():
@@ -38,15 +36,15 @@ def main():
 
         # Processing: Section will be built later
         pressed = pygame.key.get_pressed()
-        snake_object.update_direction(pressed)
+        game_state.handle_input(pressed)
 
         if frames % 30 == 0:
-            snake_object.update()
+            game_state.update()
 
         # Render elements of the game
         WINDOW.fill(BACKGROUND)
         draw_grid(WINDOW, GRID_SQUARE_SIZE)
-        snake_object.render(WINDOW)
+        game_state.render()
 
         pygame.display.update()
         fpsClock.tick(FPS)
