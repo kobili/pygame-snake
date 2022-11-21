@@ -1,6 +1,7 @@
 from __future__ import annotations
 from enum import Enum
 import pygame
+from pygame.locals import *
 
 Direction = Enum('Direction', ['UP', 'DOWN', 'LEFT', 'RIGHT'])
 
@@ -8,41 +9,56 @@ HEAD_COLOUR = (255, 0, 0)
 TAIL_COLOUR = (0, 0, 255)
 
 class Snake:
-    def __init__(self, start_x: int, start_y: int, direction: Direction, max_x: int, max_y: int, segment_size: int):
+    def __init__(self, start_x: int, start_y: int, direction: Direction, max_x: int, max_y: int, segment_size: int, tail_length: int = 1):
         self.direction = direction
         self.max_x = max_x
         self.max_y = max_y
         self.segment_size = segment_size
 
-        self.head = SnakeSegment(start_x, start_y, None, None)
-        self.tail = SnakeSegment(start_x, start_y - segment_size, self.head, None)
-        self.head.next = self.tail
+        self.x = start_x
+        self.y = start_y
+        self.tail_length = tail_length
+        self.tail = [(start_x, start_y - segment_size)]
 
+    def update_direction(self, pressed):
+        if pressed[K_UP] or pressed[K_w]:
+            self.direction = Direction.UP
+        elif pressed[K_RIGHT] or pressed[K_d]:
+            self.direction = Direction.RIGHT
+        elif pressed[K_DOWN] or pressed[K_s]:
+            self.direction = Direction.DOWN
+        elif pressed[K_LEFT] or pressed[K_a]:
+            self.direction = Direction.LEFT
+
+    def update(self):
+
+        self.tail.insert(0, (self.x, self.y))
+
+        if self.direction == Direction.UP:
+            self.y = clamp(self.y - self.segment_size, 0, self.max_y)
+        elif self.direction == Direction.DOWN:
+            self.y = clamp(self.y + self.segment_size, 0, self.max_y)
+        elif self.direction == Direction.RIGHT:
+            self.x = clamp(self.x + self.segment_size, 0, self.max_x)
+        elif self.direction == Direction.LEFT:
+            self.x = clamp(self.x - self.segment_size, 0, self.max_x)
+        # if (self.x, self.y) == current_pos:
+        #     return
+
+        if len(self.tail) > self.tail_length:
+            self.tail = self.tail[:-1]
+        
     def render(self, WINDOW: pygame.Surface):
-        current_segment = self.head
-        isHead = True
-        while not current_segment is None:
-            colour = TAIL_COLOUR
+        head = pygame.Rect(self.x, self.y, self.segment_size, self.segment_size)
+        pygame.draw.rect(WINDOW, HEAD_COLOUR, head)
 
-            if isHead:
-                colour = HEAD_COLOUR
-                isHead = False
+        for position in self.tail:
+            tail = pygame.Rect(position[0], position[1], self.segment_size, self.segment_size)
+            pygame.draw.rect(WINDOW, TAIL_COLOUR, tail)
 
-            current_segment.render(WINDOW, colour, self.segment_size)
-            current_segment = current_segment.next
-
-
-class SnakeSegment:
-    def __init__(self, x: int, y: int, prev: SnakeSegment | None, next: SnakeSegment | None):
-        self.x = x
-        self.y = y
-        self.last_x = x
-        self.last_y = y
-
-        self.prev = prev
-        self.next = next
-    
-    def render(self, WINDOW: pygame.Surface, colour: tuple, segment_size: int):
-        square = pygame.Rect(self.x, self.y, segment_size, segment_size)
-
-        pygame.draw.rect(WINDOW, colour, square)
+def clamp(x, min, max):
+    if x < min:
+        x = min
+    elif x > max:
+        x = max
+    return x
