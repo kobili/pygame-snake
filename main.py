@@ -1,6 +1,5 @@
 import pygame
 import sys
-import random
 from pygame.locals import *
 from debug import draw_grid
 from game_state import GameState
@@ -18,7 +17,7 @@ WINDOW_HEIGHT = 500
 GRID_SQUARE_SIZE = 20
 
 WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-pygame.display.set_caption('My Game!')
+pygame.display.set_caption('Python!')
 
 game_state = GameState(WINDOW, GRID_SQUARE_SIZE, WINDOW_WIDTH, WINDOW_HEIGHT)
 
@@ -26,6 +25,7 @@ game_state = GameState(WINDOW, GRID_SQUARE_SIZE, WINDOW_WIDTH, WINDOW_HEIGHT)
 def main():
     looping = True
     frames = 0
+    debug = False
     # Main game loop
     while looping:
         # Get inputs
@@ -43,7 +43,10 @@ def main():
 
         # Render elements of the game
         WINDOW.fill(BACKGROUND)
-        # draw_grid(WINDOW, GRID_SQUARE_SIZE)
+
+        if debug:
+            draw_grid(WINDOW, GRID_SQUARE_SIZE)
+
         game_state.render()
 
         pygame.display.update()
