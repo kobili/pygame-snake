@@ -20,15 +20,19 @@ class Snake:
         self.tail_length = tail_length
         self.tail = [(start_x, start_y - segment_size)]
 
-    def update_direction(self, pressed):
+    def handle_input(self, pressed):
         if pressed[K_UP] or pressed[K_w]:
-            self.direction = Direction.UP
+            if self.direction != Direction.DOWN:
+                self.direction = Direction.UP
         elif pressed[K_RIGHT] or pressed[K_d]:
-            self.direction = Direction.RIGHT
+            if self.direction != Direction.LEFT:
+                self.direction = Direction.RIGHT
         elif pressed[K_DOWN] or pressed[K_s]:
-            self.direction = Direction.DOWN
+            if self.direction != Direction.UP:
+                self.direction = Direction.DOWN
         elif pressed[K_LEFT] or pressed[K_a]:
-            self.direction = Direction.LEFT
+            if self.direction != Direction.RIGHT:
+                self.direction = Direction.LEFT
 
     def update(self):
 

@@ -38,12 +38,12 @@ def main():
         pressed = pygame.key.get_pressed()
         game_state.handle_input(pressed)
 
-        if frames % 30 == 0:
+        if frames % 10 == 0:
             game_state.update()
 
         # Render elements of the game
         WINDOW.fill(BACKGROUND)
-        draw_grid(WINDOW, GRID_SQUARE_SIZE)
+        # draw_grid(WINDOW, GRID_SQUARE_SIZE)
         game_state.render()
 
         pygame.display.update()

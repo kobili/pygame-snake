@@ -13,7 +13,7 @@ class GameState:
         self.window_height = window_height
 
     def handle_input(self, pressed):
-        self.snake.update_direction(pressed)
+        self.snake.handle_input(pressed)
 
     def update(self):
         self.snake.update()
