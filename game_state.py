@@ -28,9 +28,22 @@ class GameState:
             
     def __eat_food(self):
         self.snake.tail_length += 1
-        self.food = Food(
+
+        new_food_position = (
             self.grid_size * random.randint(0, (self.window_width / self.grid_size) - 1),
-            self.grid_size * random.randint(0, (self.window_height / self.grid_size) - 1), 
+            self.grid_size * random.randint(0, (self.window_height / self.grid_size) - 1)
+        )
+
+        # try a new location if food is spawned in snake
+        while new_food_position in self.snake.tail or new_food_position == (self.snake.x, self.snake.y):
+            new_food_position = (
+                self.grid_size * random.randint(0, (self.window_width / self.grid_size) - 1),
+                self.grid_size * random.randint(0, (self.window_height / self.grid_size) - 1)
+            )
+
+        self.food = Food(
+            new_food_position[0],
+            new_food_position[1],
             self.grid_size
         )
 
