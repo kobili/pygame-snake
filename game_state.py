@@ -18,14 +18,25 @@ class GameState:
     def update(self):
         self.snake.update()
 
-        # check if snake has eaten the foot
+        # check if snake has eaten itself
+        if (self.snake.x, self.snake.y) in self.snake.tail:
+            self.__restart_game()
+
+        # check if snake has eaten the food
         if self.snake.x == self.food.x and self.snake.y == self.food.y:
-            self.snake.tail_length += 1
-            self.food = Food(
-                self.grid_size * random.randint(0, (self.window_width / self.grid_size) - 1),
-                self.grid_size * random.randint(0, (self.window_height / self.grid_size) - 1), 
-                self.grid_size
-            )
+            self.__eat_food()
+            
+    def __eat_food(self):
+        self.snake.tail_length += 1
+        self.food = Food(
+            self.grid_size * random.randint(0, (self.window_width / self.grid_size) - 1),
+            self.grid_size * random.randint(0, (self.window_height / self.grid_size) - 1), 
+            self.grid_size
+        )
+
+    def __restart_game(self):
+        self.snake = Snake(self.window_width - 2 * self.grid_size, 2 * self.grid_size, Direction.DOWN, self.window_width - self.grid_size, self.window_height - self.grid_size, self.grid_size)
+        self.food = Food(self.grid_size, self.window_height - 2 * self.grid_size, self.grid_size)
     
     def render(self):
         self.snake.render(self.window)
